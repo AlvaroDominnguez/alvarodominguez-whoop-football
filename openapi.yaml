@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: WHOOP Football Private API
+  version: 1.0.0
+  description: Read-only authenticated access to the user's latest WHOOP report and exports.
+servers:
+  - url: https://whoop-private-api-production.up.railway.app
+security:
+  - BearerAuth: []
+paths:
+  /health:
+    get:
+      security: []
+      operationId: healthCheck
+      summary: Check API availability
+      responses:
+        "200":
+          description: API is alive
+  /v1/latest:
+    get:
+      operationId: getLatestWhoopReport
+      summary: Get the latest WHOOP daily report
+      responses:
+        "200":
+          description: Latest report
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          description: Missing or invalid bearer token
+  /v1/daily.csv:
+    get:
+      operationId: getDailyHistoryCsv
+      summary: Get daily WHOOP history as CSV
+      responses:
+        "200":
+          description: Daily history
+          content:
+            text/csv:
+              schema:
+                type: string
+        "401":
+          description: Missing or invalid bearer token
+  /v1/workouts.csv:
+    get:
+      operationId: getWorkoutHistoryCsv
+      summary: Get WHOOP workout history as CSV
+      responses:
+        "200":
+          description: Workout history
+          content:
+            text/csv:
+              schema:
+                type: string
+        "401":
+          description: Missing or invalid bearer token
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
